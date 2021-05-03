@@ -8,3 +8,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cp $(echo $DIR)/.p10k.zsh ~/
 cp $(echo $DIR)/.zshrc ~/
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+echo "export LC_ALL=en_US.UTF-8" >> ~/.zshrc
+echo "export LANG=en_US.UTF-8" >> ~/.zshrc
+
+zsh

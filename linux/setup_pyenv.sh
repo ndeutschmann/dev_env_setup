@@ -8,10 +8,24 @@ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
 echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
 
-echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.zshrc
+source ~/.zshrc
+
+git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+
+echo 'eval "$(pyenv init --path)"' >> ~/.zshrc
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc
+
+source ~/.zshrc
 
 pyenv install 3.8.9
 pyenv global 3.8.9
+
+pyenv virtualenv default
+echo 'pyenv activate default' >> ~/.zshrc
+pyenv activate default
+pip install --upgrade pip wheel
+pip install jupyter ipdb
 
 mkdir -p ~/.jupyter
 cp ./jupyter_notebook_config.py ~/.jupyter/

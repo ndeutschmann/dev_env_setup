@@ -224,3 +224,7 @@ path: ")
  :auto-preamble t
  ))
 
+
+(setq org-attach-store-link-p 'attached)
+
+(setq dnd-protocol-alist nil)

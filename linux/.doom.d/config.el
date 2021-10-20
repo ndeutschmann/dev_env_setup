@@ -79,10 +79,21 @@
 path: ")
       :unnarrowed t)
 
+   ("b" "bibliography reference" plain
+"#+filetags: :ref: \n- tags ::
 
+* Metadata
+- Title: ${title}
+- Authors: %^{author}
+- Year: %^{year}
 
-   )
-   )
+* Notes
+
+"
+         :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+         :unnarrowed t)
+   ))
 
 (setq org-roam-dailies-capture-templates
       '(("d" "default" entry "* %<%I:%M %p>: %?"
@@ -109,57 +120,32 @@ path: ")
 
 
 (use-package! org-ref
-    ;; :init
-    ; code to run before loading org-ref
-    :config
-    (setq
+:config
+(setq
          org-ref-completion-library 'org-ref-ivy-cite
          org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
          org-ref-default-bibliography (list bibliography-path)
          org-ref-bibliography-notes "~/org/bibnotes.org"
-         org-ref-note-title-format "* NOTES %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
          org-ref-notes-directory bibliography-notes
          org-ref-notes-function 'orb-edit-notes
+         ))
+
+
+
+(after! helm
+  (use-package! helm-bibtex
+    :custom
+    (bibtex-completion-bibliography (list bibliography-path))
+    (bibtex-completion-pdf-field "file")
     ))
 
-;; bibtex-completion
-(after! org-ref
-  (setq
-   bibtex-completion-notes-path bibliography-notes
-   bibtex-completion-bibliography bibliography-path
-   bibtex-completion-pdf-field "file"
-   bibtex-completion-notes-template-multiple-files
-   (concat
-    "#+TITLE: ${title}\n"
-    "#+ROAM_KEY: cite:${=key=}"
-    "#+ROAM_TAGS: ${keywords}"
-    "#+CREATED:%<%Y-%m-%d-%H-%M-%S>"
-    "Time-stamp: <>\n"
-    "- tags :: \n"
-    "* NOTES \n"
-    ":PROPERTIES:\n"
-    ":Custom_ID: ${=key=}\n"
-    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-    ":AUTHOR: ${author-abbrev}\n"
-    ":JOURNAL: ${journaltitle}\n"
-    ":DATE: ${date}\n"
-    ":YEAR: ${year}\n"
-    ":DOI: ${doi}\n"
-    ":URL: ${url}\n"
-    ":END:\n\n"
-    )
-   )
-)
-(setq bibtex-completion-cite-prompt-for-optional-arguments nil)
-
-(setq org-roam-bibtex-preformat-keywords '(("citekey" . "=key=")
-                                           "author-abbrev"
-                                           "author-or-editor", "url", "journaltitle"))
 
 (use-package! org-roam-bibtex
-  :after org-roam
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
   :config
-  (require 'org-ref)) 
+  (setq orb-preformat-keywords '("citekey" "author" "year"))
+)
 
 (map! :leader
       :desc "Open Bibliography manager"
@@ -212,19 +198,12 @@ path: ")
 ;; Set font size
 (set-face-attribute 'default nil :height 140)
 
-;; Setup HTML publishing
-(add-to-list 'org-publish-project-alist
- `("org-notes"
- :base-directory "~/org/"
- :base-extension "org"
- :publishing-directory "~/public_html/"
- :recursive t
- :publishing-function org-html-publish-to-html
- :headline-levels 4             ; Just the default for this project.
- :auto-preamble t
- ))
 
 
+;; Propose links to attachments in nodes
 (setq org-attach-store-link-p 'attached)
 
-(setq dnd-protocol-alist nil)
+;; Don't open files on drag n drop
+;; (setq dnd-protocol-alist nil)
+
+;; update buffers in dired when open

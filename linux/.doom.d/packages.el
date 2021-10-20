@@ -49,8 +49,14 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 
 ;(unpin! t)
+;
+;
+
+(package! org-ref
+:recipe (:host github :repo "jkitchin/org-ref" :branch "org-ref-2"))
+
 (package! org-roam-bibtex
-  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+:recipe (:host github :repo "org-roam/org-roam-bibtex"))
 
 ;; When using org-roam via the `+roam` flag
 (unpin! org-roam)

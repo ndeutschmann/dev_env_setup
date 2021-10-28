@@ -43,12 +43,10 @@
       "n r d c" #'org-roam-dailies-capture-today)
 
 (map! :leader
-      :desc "Focus on current subtree (Zoom Narrow)"
-      "n z n" #'org-narrow-to-subtree)
+       (:prefix ("n z" . "focus")
+        :desc "widen" "w" #'widen
+        :desc "narrow to subtree" "n" #'org-narrow-to-subtree))
 
-(map! :leader
-      :desc "Unfocus current subtree (Zoom Wide)"
-      "n z w" #'widen)
 
 ;; Templates
 (setq org-roam-capture-templates
@@ -100,6 +98,10 @@ path: ")
          :if-new (file+head "%<%Y-%m-%d>.org"
 "#+title: %<%Y-%m-%d>
 
+* Tasks
+
+** TODO
+
 * Schedule
 
 |        Time | Activity | Notes |
@@ -111,6 +113,31 @@ path: ")
 | Later Focus |          |       |
 
 "))))
+
+
+;; Heading templates (skeleton based)
+;; Note edition
+(define-skeleton org-labbook-skeleton "Insert a lab book heading"
+  "Title: "
+  "** "  (format-time-string "<%Y-%m-%d %a>") " " str "\n"
+  ":PROPERTIES:\n"
+  ":CATEGORY: Lab book\n"
+  ":END:\n")
+(define-skeleton org-meeting-skeleton "Insert a meeting heading"
+  "Title: "
+  "* "  (progn (org-time-stamp ".") nil) " " str "\n"
+  ":PROPERTIES:\n"
+  ":CATEGORY: Meeting\n"
+  ":END:\n\n"
+  "** Agenda\n"
+  "** Notes")
+
+
+(map! :leader
+      (:prefix ("n i" . "insert")
+       :desc "Lab book entry" "l" #'org-labbook-skeleton
+       :desc "Meeting entry" "m" #'org-meeting-skeleton)
+      )
 
 
 
@@ -164,21 +191,21 @@ path: ")
 
 ;; Note edition
 (map! :leader
-      (:prefix "n"
-      (:desc "Edit" :prefix "e"
+      (:prefix ("n e" . "edit")
+
        :desc "Convert to heading" "h" #'org-toggle-heading
        :desc "Convert to checkbox" "t" #'org-todo
        :desc "Convert to item" "i" #'org-toggle-item
        :desc "Increase heading" "k" #'org-do-promote
        :desc "Decrease heading" "j" #'org-do-demote
-       )))
+       ))
+
 
 ;; Setup for TODOS
 ;;
 (setq org-use-fast-todo-selection nil)
  (setq org-todo-keywords
-  '((sequence "TODO"
-      "DONE")))
+  '((sequence "IDEA" "TODO" "DONE")))
 
 ;; Deactivate autocompletion in org
 (setq org-roam-completion-everywhere nil)

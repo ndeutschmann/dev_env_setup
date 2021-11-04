@@ -234,3 +234,15 @@ path: ")
 ;; (setq dnd-protocol-alist nil)
 
 ;; update buffers in dired when open
+
+
+;; Agenda views
+;;
+(add-to-list 'org-agenda-custom-commands
+             '("W" "Weekly review"
+               agenda ""
+               ((org-agenda-start-day "-14d")
+                (org-agenda-span 14)
+                (org-agenda-show-all-dates nil)
+                ;;(org-agenda-start-on-weekday 1)
+                (org-agenda-start-with-log-mode '(closed)))))

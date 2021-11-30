@@ -8,9 +8,9 @@ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 echo "export PYENV_VIRTUALENV_DISABLE_PROMPT=1" >> ~/.zshrc
 echo "export PYENV_ROOT=\"$HOME/.pyenv\"" >> ~/.zshrc
 echo "export PATH=\"$PYENV_ROOT/bin:$PATH\"" >> ~/.zshrc
-echo "eval \"$(pyenv init --path)\"" >> ~/.zshrc
-echo "eval \"$(pyenv init -)\"" >> ~/.zshrc
-echo "eval \"$(pyenv virtualenv-init -)\"" >> ~/.zshrc
+echo "eval \"\$(pyenv init --path)\"" >> ~/.zshrc
+echo "eval \"\$(pyenv init -)\"" >> ~/.zshrc
+echo "eval \"\$(pyenv virtualenv-init -)\"" >> ~/.zshrc
 
 echo "export LC_ALL=en_US.UTF-8" >> ~/.zshrc
 echo "export LANG=en_US.UTF-8" >> ~/.zshrc

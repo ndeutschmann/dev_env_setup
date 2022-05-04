@@ -53,13 +53,13 @@
       '(
    ("d" "default" plain
       "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags:\n- tags :: \n"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags:\n"
                          )
       :unnarrowed t)
    
    ("k" "knowledge" plain
       "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :knowledge: \n- tags :: \n\n* Summary\n\n* Resources"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :knowledge: \n\n* Summary\n\n* Resources"
                          )
       :unnarrowed t)
 
@@ -67,7 +67,7 @@
       "%?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
 "#+title: ${title}
-#+filetags: :report: \n- tags ::
+#+filetags: :report:
 
 * INSERTTAG ${title}
 :PROPERTIES:
@@ -78,7 +78,7 @@ path: ")
       :unnarrowed t)
 
    ("b" "bibliography reference" plain
-"#+filetags: :ref: \n- tags ::
+"#+filetags: :ref:
 
 * Metadata
 - Title: ${title}
@@ -128,15 +128,29 @@ path: ")
   "* "  (progn (org-time-stamp ".") nil) " " str "\n"
   ":PROPERTIES:\n"
   ":CATEGORY: Meeting\n"
-  ":END:\n\n"
+  ":END:\n"
   "** Agenda\n"
   "** Notes")
+
+(define-skeleton org-image-size "Specify image size"
+  "#+attr_html: :width 500px"
+  "#+attr_latex: :width 500px"
+  )
+
+(define-skeleton org-ref-insert-bib-section "Insert an Org-Ref bibliography section"
+  ""
+  "* Bibliography\n"
+  (org-ref-insert-bibliography-link)
+  "\n"
+ )
 
 
 (map! :leader
       (:prefix ("n i" . "insert")
        :desc "Lab book entry" "l" #'org-labbook-skeleton
-       :desc "Meeting entry" "m" #'org-meeting-skeleton)
+       :desc "Meeting entry" "m" #'org-meeting-skeleton
+       :desc "Image size spec" "i" #'org-image-size
+       :desc "Bibliography section" "b" #'org-ref-insert-bib-section)
       )
 
 
@@ -151,11 +165,12 @@ path: ")
 (setq
          org-ref-completion-library 'org-ref-ivy-cite
          org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-         org-ref-default-bibliography (list bibliography-path)
-         org-ref-bibliography-notes "~/org/bibnotes.org"
+         bibtex-completion-bibliography (list bibliography-path) ; org-ref-default-bibliography
+         bibtex-completion-notes-path "~/org/bibnotes.org" ; org-ref-bibliography-notes
          org-ref-notes-directory bibliography-notes
          org-ref-notes-function 'orb-edit-notes
          ))
+
 
 
 
@@ -176,7 +191,7 @@ path: ")
 
 (map! :leader
       :desc "Open Bibliography manager"
-      "o b" #'helm-bibtex)
+      "o b" #'org-ref-insert-cite-link)
 
 ;;Latex Preview
 ;;
@@ -246,3 +261,8 @@ path: ")
                 (org-agenda-show-all-dates nil)
                 ;;(org-agenda-start-on-weekday 1)
                 (org-agenda-start-with-log-mode '(closed)))))
+
+
+
+;; Load environment from shell
+(exec-path-from-shell-initialize)

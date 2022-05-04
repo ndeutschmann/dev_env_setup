@@ -53,7 +53,7 @@
 ;
 
 (package! org-ref
-:recipe (:host github :repo "jkitchin/org-ref" :branch "org-ref-2"))
+:recipe (:host github :repo "jkitchin/org-ref" :branch "master")) ; :branch "org-ref-2"
 
 (package! org-roam-bibtex
 :recipe (:host github :repo "org-roam/org-roam-bibtex"))
@@ -64,3 +64,4 @@
 ;; When using bibtex-completion via the `biblio` module
 (unpin! bibtex-completion helm-bibtex ivy-bibtex)
 
+(package! exec-path-from-shell)

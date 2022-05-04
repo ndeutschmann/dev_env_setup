@@ -6,17 +6,18 @@ sudo apt install --no-install-recommends make build-essential libssl-dev zlib1g-
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
 echo "export PYENV_VIRTUALENV_DISABLE_PROMPT=1" >> ~/.zshrc
-echo "export PYENV_ROOT=\"$HOME/.pyenv\"" >> ~/.zshrc
-echo "export PATH=\"$PYENV_ROOT/bin:$PATH\"" >> ~/.zshrc
+echo "export PYENV_ROOT=\"\$HOME/.pyenv\"" >> ~/.zshrc
+echo "export PATH=\"\$PYENV_ROOT/bin:$PATH\"" >> ~/.zshrc
 echo "eval \"\$(pyenv init --path)\"" >> ~/.zshrc
 echo "eval \"\$(pyenv init -)\"" >> ~/.zshrc
-echo "eval \"\$(pyenv virtualenv-init -)\"" >> ~/.zshrc
 
-echo "export LC_ALL=en_US.UTF-8" >> ~/.zshrc
-echo "export LANG=en_US.UTF-8" >> ~/.zshrc
+source ./.zshrc
 
 pyenv install 3.8.9
 pyenv global 3.8.9
+
+git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+echo "eval \"\$(pyenv virtualenv-init -)\"" >> ~/.zshrc
 
 mkdir -p ~/.jupyter
 cp ./jupyter_notebook_config.py ~/.jupyter/

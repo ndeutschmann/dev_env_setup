@@ -188,3 +188,5 @@
 
 ;; Move vertically within wrapped lines
 (setq evil-respect-visual-line-mode t)
+
+

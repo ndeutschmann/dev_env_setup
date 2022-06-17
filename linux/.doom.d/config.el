@@ -163,7 +163,7 @@ path: ")
 (use-package! org-ref
 :config
 (setq
-         org-ref-completion-library 'org-ref-ivy-cite
+         org-ref-completion-library 'org-ref-helm-cite
          org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
          bibtex-completion-bibliography (list bibliography-path) ; org-ref-default-bibliography
          bibtex-completion-notes-path "~/org/bibnotes.org" ; org-ref-bibliography-notes
@@ -182,22 +182,26 @@ path: ")
     ))
 
 
-(use-package! org-roam-bibtex
-  :after (org-roam)
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (setq orb-preformat-keywords '("citekey" "author" "year"))
-)
 
 (map! :leader
       :desc "Open Bibliography manager"
       "o b" #'org-ref-insert-cite-link)
+
 
 ;;Latex Preview
 ;;
 (map! :leader
       :desc "Toggle Latex Preview"
       "t L" #'org-latex-preview)
+
+;; Latex Reference Manager
+(setq reftex-default-bibliography (list bibliography-path))
+
+
+;;emacs RefTeX
+(setq reftex-ref-macro-prompt nil) ;skips picking the reference style
+(setq reftex-refstyle "\\cref")
+
 
 ;; Alias Management
 (map! :leader
@@ -263,6 +267,43 @@ path: ")
                 (org-agenda-start-with-log-mode '(closed)))))
 
 
+;; Org roam bibtex
+(use-package! org-roam-bibtex
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq orb-preformat-keywords '("citekey" "author" "year"))
+  (require 'org-ref)
+)
+
+(org-roam-bibtex-mode)
+
+;; disable annoying fontification in latex
+(setq font-latex-fontify-script nil)
+
 
 ;; Load environment from shell
 (exec-path-from-shell-initialize)
+
+;; Setup variables for latex mode
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (setq TeX-after-compilation-finished-functions nil) ;; Do no open PDFs after compilation
+            (setq-default TeX-master nil) ;; Ask for master file if not specified
+            (setq TeX-auto-save t)
+            (setq TeX-parse-self t) ;; Parse files to look for local variables (including master file definition)
+            ;; Use the 'open' command to read PDF -> leads to preview by default
+            (setq TeX-view-program-list '(("Preview" "open %o")))
+            (setq TeX-view-program-selection '((output-pdf "Preview")))
+            ;; Define a new command to remove ALL auxiliary files (not only those of the master file)
+            (add-to-list 'TeX-command-list
+                         '("Clean ALL"
+                           "latexmk -C *.tex"
+                           TeX-run-command
+                           nil                              ; ask for confirmation
+                           t                                ; active in all modes
+                           :help "Delete all latex auxiliary files, including for others than the master file")
+                         )
+            )
+)
+

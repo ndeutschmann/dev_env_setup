@@ -156,7 +156,7 @@ path: ")
 
 
 (setq bibliography-path "~/org/biblio.bib")
-(setq pdf-path  "~/Zotero/storage/")
+(setq pdf-path  "~/Box/ZoteroAttachments")
 (setq bibliography-notes "~/org/")
 
 
@@ -297,7 +297,7 @@ path: ")
             (setq TeX-view-program-selection '((output-pdf "Preview")))
             ;; Define a new command to remove ALL auxiliary files (not only those of the master file)
             (add-to-list 'TeX-command-list
-                         '("Clean ALL"
+                         '("Clean all aux"
                            "latexmk -C *.tex"
                            TeX-run-command
                            nil                              ; ask for confirmation
@@ -307,3 +307,12 @@ path: ")
             )
 )
 
+;; Git smerge commands
+;;
+(map! :leader
+       (:prefix ("g m" . "merge")
+        :desc "keep mine" "k m" #'smerge-keep-mine
+        :desc "keep other" "k o" #'smerge-keep-other
+        :desc "next" "n" #'smerge-next
+        :desc "previous" "p" #'smerge-prev
+        ))

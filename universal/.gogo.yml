@@ -1,3 +1,31 @@
 clean:
   latex:
-    latexmk -C *.tex
+    cmd: latexmk -C *.tex
+    help: Remove obsolete files in current conda env
+
+git:
+  ignore-here:
+    cmd: echo "*" >> .gitignore
+    help: git-ignore all local files
+
+  ignore:
+    cmd: |-
+      f () {
+      if [ -z "$1" ]
+        then
+          echo "git-ignoring local directory: $(pwd)"
+          echo "adding '*' to $(pwd)/.gitignore"
+          echo "*" >> .gitignore
+        else
+          echo "adding to $(pwd)/.gitignore:"
+          echo "$@"
+          for f in "$@"
+          do
+            echo "$f" >> .gitignore
+          done
+      fi
+      }
+      f
+    help: git ignore files [arg] or whole working directory [no arg]
+    
+   

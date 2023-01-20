@@ -2,6 +2,9 @@ clean:
   latex:
     cmd: latexmk -C *.tex
     help: Remove obsolete files in current conda env
+  pip:
+    cmd: pip freeze --exclude-editable | xargs pip uninstall -y
+    help: uninstall all non-editable pip packages
 
 git:
   ignore-here:
